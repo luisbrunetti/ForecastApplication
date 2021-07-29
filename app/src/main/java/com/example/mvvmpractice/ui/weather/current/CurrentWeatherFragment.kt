@@ -14,13 +14,22 @@ import com.example.mvvmpractice.data.network.ConnectivityInterceptorImpl
 import com.example.mvvmpractice.data.network.WeatherNetworkDataSource
 import com.example.mvvmpractice.data.network.WeatherNetworkDataSourceImpl
 import com.example.mvvmpractice.databinding.FragmentCurrentWeatherBinding
+import com.example.mvvmpractice.ui.base.ScopeFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
-class CurrentWeatherFragment : Fragment() {
+class CurrentWeatherFragment : ScopeFragment(), KodeinAware {
+    override val kodein: Kodein by closestKodein() //ClosesKodein in the one ForecastApplication
+    private val viewModelFactory: CurrentWeatherViewModelFactory by instance()
+    //private val viewModelFactory = CurrentWeatherViewModelFactory() // Bad practice
     private var _binding: FragmentCurrentWeatherBinding? = null
     private val binding get() = _binding!!
+
     companion object {
         fun newInstance() = CurrentWeatherFragment()
     }
@@ -38,7 +47,13 @@ class CurrentWeatherFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CurrentWeatherViewModel::class.java)
+       //viewModel = ViewModelProvider(this).get(CurrentWeatherViewModel::class.java)
+
+        viewModel = ViewModelProvider(this,viewModelFactory)
+            .get(CurrentWeatherViewModel::class.java)
+
+        bindUI()
+/*
         // TODO: Use the ViewModel
         val apiService = ApixuWeatherApiService(ConnectivityInterceptorImpl(requireContext()))
         val weatherNetworkDataSource = WeatherNetworkDataSourceImpl(apiService)
@@ -58,6 +73,16 @@ class CurrentWeatherFragment : Fragment() {
              */
             weatherNetworkDataSource.fetchCurrentWeather("New York")
         }
+        */
     }
-
+    //Create Local Scope
+    //Bad practice use Globbal Scope for that reason we will create a ScopeFragemnt to inherit
+    private fun bindUI() = GlobalScope.launch{
+        val currrentWeather = viewModel.weather.await()
+        currrentWeather.observe(viewLifecycleOwner, Observer {
+            // Observer only in the current lifecycle
+            if(it == null) return@Observer
+            binding.tvTitleFragmentCurrentWeather.text = it.toString()
+        })
+    }
 }

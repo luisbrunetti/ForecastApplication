@@ -26,6 +26,7 @@ class ForecastRepositoryImpl (
             persistFetchedCurrentWeather(newCurrentWeather)
         }
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getCurrentWeather(metric: Boolean): LiveData<out UnitSpecificCurrentWatherEntry> {
         return withContext(Dispatchers.IO){ //returns a value instead of Launch
             initWeatherData()
