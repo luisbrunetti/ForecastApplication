@@ -3,16 +3,19 @@ package com.example.mvvmpractice.data.db.unitlocalized
 import androidx.room.ColumnInfo
 
 data class MetricCurrentWeatherEntry(
-    @ColumnInfo(name = "tempC")
-    override val temperature: Double,
-    @ColumnInfo(name= "condition_icon")
-    override val conditionIconUrl: List<String>,
-    @ColumnInfo(name= "windKph")
-    override val windSpeed: Double,
-    @ColumnInfo(name= "precipMm")
+    @ColumnInfo(name = "temperature")
+    override val temperature: Int,
+    @ColumnInfo(name= "precip")
     override val precip: Double,
-    @ColumnInfo(name= "feelslikeC")
+    @ColumnInfo(name= "feelslike")
     override val feelsLikeTemperature: Double,
-    @ColumnInfo(name= "visKm")
-    override val visibilityDistance: Double
+    @ColumnInfo(name= "wind_speed")
+    override val wind_speed: Int,
+    /*
+    @ColumnInfo(name= "wind_speed")
+    override val wind_Speed: Int,
+
+
+
+     */
 ): UnitSpecificCurrentWatherEntry

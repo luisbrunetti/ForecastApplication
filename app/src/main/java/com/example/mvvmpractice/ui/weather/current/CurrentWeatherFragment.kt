@@ -77,9 +77,10 @@ class CurrentWeatherFragment : ScopeFragment(), KodeinAware {
     }
     //Create Local Scope
     //Bad practice use Globbal Scope for that reason we will create a ScopeFragemnt to inherit
-    private fun bindUI() = GlobalScope.launch{
+    private fun bindUI() = launch{
         val currrentWeather = viewModel.weather.await()
         currrentWeather.observe(viewLifecycleOwner, Observer {
+            Log.d("CurrentWeatherFragment", it.toString())
             // Observer only in the current lifecycle
             if(it == null) return@Observer
             binding.tvTitleFragmentCurrentWeather.text = it.toString()

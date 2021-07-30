@@ -1,6 +1,7 @@
 package com.example.mvvmpractice.data.repository
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import com.example.mvvmpractice.data.db.dao.CurrentWeatherDao
@@ -17,12 +18,16 @@ class ForecastRepositoryImpl (
     private val currentWeatherDao : CurrentWeatherDao,
     private val weatherNetowrkDataSource: WeatherNetworkDataSource
 ) : ForecastRepository {
+    companion object {
+        val TAG = "ForecastRepositoryImpl"
+    }
     //Lifecycles doesn't matter inside of repository
     init{
         //Repository Doesnt have anny life cuycle y dont need to worry about this repository being destroyed
         //Whn it's destroyed all the app is destryec so life cycle doesn't play a role in this observer
         weatherNetowrkDataSource.downloadedCurrentWeather.observeForever { newCurrentWeather ->
             // persist
+            Log.d(TAG,newCurrentWeather.toString())
             persistFetchedCurrentWeather(newCurrentWeather)
         }
     }
@@ -50,14 +55,15 @@ class ForecastRepositoryImpl (
             "New York"
         )
     }
-    @RequiresApi(Build.VERSION_CODES.O)
+    //@RequiresApi(Build.VERSION_CODES.O)
     private suspend fun initWeatherData(){
-        if(isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1)))
+      ///  if(isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1)))
             fetchCurrentWeather()
     }
-    @RequiresApi(Build.VERSION_CODES.O)
+    //@RequiresApi(Build.VERSION_CODES.O)
+    /*
     private fun isFetchCurrentNeeded(lastFetchTime: ZonedDateTime): Boolean{
-        val thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30)
-        return lastFetchTime.isBefore(thirtyMinutesAgo)
-    }
+        //val thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30)
+        //return lastFetchTime.isBefore(thirtyMinutesAgo)
+    }*/
 }

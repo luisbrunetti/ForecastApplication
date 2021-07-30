@@ -20,7 +20,7 @@ interface CurrentWeatherDao {
     fun getWeatherMetric(): LiveData<MetricCurrentWeatherEntry> //Observe by changes so whenever the current weather changes in the database the live data will change to
 
     @Query("select * from current_weather where id =$CURRENT_WEATHER_ID")
-    fun getWeatherImperial(): LiveData<ImperialCurrentWeatherEntry> //Obser by changes so wheenver the current weather changes in the database the live data will change to
+    fun getWeatherImperial(): LiveData<ImperialCurrentWeatherEntry> //Observe by changes so wheenver the current weather changes in the database the live data will change to
 
 
 }

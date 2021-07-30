@@ -1,6 +1,7 @@
 package com.example.mvvmpractice
 
 import android.app.Application
+import android.util.Log
 import com.example.mvvmpractice.data.db.ForecastDatabase
 import com.example.mvvmpractice.data.network.ConnectivityInterceptor
 import com.example.mvvmpractice.data.network.ConnectivityInterceptorImpl
@@ -21,6 +22,7 @@ import org.kodein.di.generic.singleton
 
 
 class ForecastApplication: Application(), KodeinAware {
+    companion object val TAG = "ForecastApplication"
     override val kodein: Kodein = Kodein.lazy {
         import(androidXModule(this@ForecastApplication))
         bind() from singleton { ForecastDatabase(instance()) } //This instance will be returned  fro mAndroid X Moduelo Also i will be la aplication Context
@@ -29,7 +31,9 @@ class ForecastApplication: Application(), KodeinAware {
         //Bind this interface with singleton will return ConnectivityInterceptorImplemetation
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         bind() from singleton {ApixuWeatherApiService(instance())}
+        Log.d(TAG,"OLI")
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance()) }
+
         bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(),instance()) }
         bind() from provider{ CurrentWeatherViewModelFactory(instance())}
     }

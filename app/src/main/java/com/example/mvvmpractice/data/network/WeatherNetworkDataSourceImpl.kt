@@ -11,7 +11,12 @@ import com.example.mvvmpractice.internal.NoConnectivityException
 class WeatherNetworkDataSourceImpl(
     private val apixuWeatherApiService: ApixuWeatherApiService
 ) : WeatherNetworkDataSource {
-
+    companion object{
+        val TAG = "WeatherNetworkDataSourceImpl"
+    }
+    init{
+        Log.d(TAG,"Creando claseWeatherNetowrkDataSource ")
+    }
     private val _donwloadedCurrentWeather = MutableLiveData<CurrentWeatherResponse>()
     //Automatically cast the mutableLive Data to be online Live Data
     //So the client code requesting downloaded current weather will not be able to change it
@@ -25,6 +30,7 @@ class WeatherNetworkDataSourceImpl(
                 .await()
             //DOWNLOADED CURRENT WEATHER IS LIVEDATE AND
             //LIVE DATA CAN NOT BE CHANGED
+            Log.d("fetchedCurrentWeather",fetchedCurrentWeather.toString())
             _donwloadedCurrentWeather.postValue(fetchedCurrentWeather)
         }catch (e : NoConnectivityException){
             Log.e("Connectivity", "No internet connection.", e)
